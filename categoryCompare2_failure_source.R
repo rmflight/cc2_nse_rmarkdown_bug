@@ -1,18 +1,8 @@
----
-title: "Test CC2 Failure Reproducibly"
-author: "Robert M Flight"
-output: rmarkdown::md_document
-editor_options: 
-  chunk_output_type: console
----
-
-
-```{r run_enrichments}
 set.seed(1234)
 create_go_annotation = function(db, ontology = NULL){
   all_genes = keys(db)
   go_all_gene = AnnotationDbi::select(db, keys = all_genes, columns = c("GOALL", "ONTOLOGYALL"))
-  
+
   if (!is.null(ontology)) {
     go_all_gene = go_all_gene[go_all_gene$ONTOLOGYALL == ontology, ]
     ontology_type = paste0("GO.", ontology)
@@ -52,4 +42,3 @@ enrich = hypergeometric_feature_enrichment(
 comb_enrich = combine_enrichments(sig1 = enrich)
 sig_cutoff = 0.1
 filter_enrich = get_significant_annotations(comb_enrich, padjust <= sig_cutoff)
-```

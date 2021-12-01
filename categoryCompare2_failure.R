@@ -1,5 +1,63 @@
 library(callr)
 
-cc2_runs = r(function() rmarkdown::render(here::here("categoryCompare2_failure.Rmd")), show = TRUE)
+# this fails
+cc2_runs = r(function() rmarkdown::render(here::here("categoryCompare2_failure.Rmd"), output_file = "cc2_fails_1.md"), show = TRUE)
+# label: run_enrichments
+# Quitting from lines 13-57 (categoryCompare2_failure.Rmd)
+# \
+# Error in FUN(X[[i]], ...) : object 'sig_cutoff' not found
+# Error: callr subprocess failed: object 'sig_cutoff' not found
+# > .Last.error.trace
+# Stack trace:
+#   Process 221313:
+#   1. callr:::r(function() rmarkdown::render(here::he ...
+#     2. callr:::get_result(output = out, options)
+#     3. throw(newerr, parent = remerr[[2]])
+#         x callr subprocess failed: object 'sig_cutoff' not found
+#   Process 221619:
+#   15. (function () ...
+#   16. rmarkdown::render(here::here("categoryCompare2_failure.Rmd"))
+#   17. knitr::knit(knit_input, knit_output, envir = envir, quiet ...
+#   18. knitr:::process_file(text, output)
+#   19. base:::withCallingHandlers(if (tangle) process_tangle(gro ...
+#   20. knitr:::process_group(group)
+#   21. knitr:::process_group.block(group)
+#   22. knitr:::call_block(x)
+#   23. knitr:::block_exec(params)
+#   24. knitr:::eng_r(options)
+#   25. knitr:::in_dir(input_dir(), evaluate(code, envir = env, n ...
+#   26. knitr:::evaluate(code, envir = env, new_device = FALSE, k ...
+#   27. evaluate::evaluate(...)
+#   28. evaluate:::evaluate_call(expr, parsed$src[[i]], envir = e ...
+#   29. evaluate:::timing_fn(handle(ev <- withCallingHandlers(wit ...
+#   30. base:::handle(ev <- withCallingHandlers(withVisible(eval( ...
+#   31. base:::withCallingHandlers(withVisible(eval(expr, envir, ...
+#   32. base:::withVisible(eval(expr, envir, enclos))
+#   33. base:::eval(expr, envir, enclos)
+#   34. base:::eval(expr, envir, enclos)
+#   35. categoryCompare2:::get_significant_annotations(comb_enric ...
+#   36. categoryCompare2:::get_significant_annotations(comb_enric ...
+#   37. categoryCompare2:::.get_significant_combined_enrichment(i ...
+#   38. base:::lapply(in_results@enriched, function(x) { ...
+#   39. categoryCompare2:::FUN(X[[i]], ...)
+#   40. categoryCompare2:::get_significant_annotations(x@statisti ...
+#   41. categoryCompare2:::get_significant_annotations(x@statisti ...
+#   42. categoryCompare2:::.get_significant_stat_results(in_resul ...
+#   43. categoryCompare2:::multi_query_list(in_results@statistic_ ...
+#   44. base:::lapply(queries, eval, list_to_query)
+#   45. base:::FUN(X[[i]], ...)
+#   46. base:::FUN(X[[i]], ...)
+#   47. base:::.handleSimpleError(function (e) ...
+#   48. h(simpleError(msg, call))
+#     x object 'sig_cutoff' not found
 
+
+# putting same code in an R file and running source works fine
 cc2_source = r(function() source(here::here("categoryCompare2_failure_source.R")), show = TRUE)
+
+# try with knitr instead of rmarkdown, this fails too if you
+# check the output md file
+cc2_knitr = r(function() knitr::knit(here::here("categoryCompare2_failure.Rmd"), output = "cc2_fails_2.md"), show = TRUE)
+
+# this runs
+rmarkdown::render(here::here("categoryCompare2_failure.Rmd"), output_file = "cc2_works.md")

@@ -1,0 +1,22 @@
+---
+title: "Test"
+output: rmarkdown::md_document
+editor_options: 
+  chunk_output_type: console
+---
+
+``` {r setup, include = FALSE}
+library(nycflights13)
+library(dplyr)
+data(flights)
+```
+
+```{r}
+keep_delay = 0
+flights %>%
+  filter(dep_delay >= keep_delay) %>%
+  group_by(carrier) %>%
+  summarize(count = n(), mean_dep_delay = mean(dep_delay, na.rm=T)) %>%  # mean follows normal R rules
+  collect %>% 
+  arrange(carrier)
+```
